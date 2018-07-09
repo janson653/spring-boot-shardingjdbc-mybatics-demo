@@ -99,19 +99,6 @@ public class AsyncShardingJdbcTest {
 
 		// 不算count了
 		businessInfoMapper.myPageListWithLike(1, 100);
-//		Example example = new Example(BusinessInfo.class);
-//		LocalDate localDate = LocalDate.of(2018, 4, 1);
-//		Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//
-//		PageHelper.startPage(1, 100)
-//				.doSelectPageInfo(() -> {
-//					example.createCriteria()
-//							.andGreaterThan("alarmDatetime", date)
-//							.andLike("businessNo", "33%");
-//					List list = businessInfoMapper.selectByExample(example);
-//					System.err.println("size=" + list.size());
-//
-//				});
 
 		stopWatch.stop();
 		System.err.println(stopWatch.shortSummary());
