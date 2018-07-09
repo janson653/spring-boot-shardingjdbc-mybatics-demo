@@ -39,13 +39,36 @@ public class AsyncShardingJdbcTest {
 
 	@Test
 	public void multiThreadDBOperation() throws InterruptedException {
-		CountDownLatch latch = new CountDownLatch(1);
-		new Thread(() -> this.testInsert()).start();
-		new Thread(() -> this.testUpdate()).start();
-		new Thread(() -> this.testSingleTableQuery()).start();
-		new Thread(() -> this.testSingleTableQuery2()).start();
-		new Thread(() -> this.testMultiTableQuery2()).start();
-		new Thread(() -> this.testMultiTableQuery2_1()).start();
+                CountDownLatch latch = new CountDownLatch(7);
+		new Thread(() -> {
+			this.testInsert();
+			latch.countDown();
+		}).start();
+		new Thread(() -> {
+			this.testUpdate();
+			latch.countDown();
+		}).start();
+		new Thread(() -> {
+			this.testSingleTableQuery();
+			latch.countDown();
+		}).start();
+		new Thread(() -> {
+			this.testSingleTableQuery2();
+			latch.countDown();
+		}).start();
+		new Thread(() -> {
+			this.testMultiTableQuery2();
+			latch.countDown();
+		}).start();
+		new Thread(() -> {
+			Thread.currentThread().setName("mytest");
+			this.testMultiTableQuery2_1();
+			latch.countDown();
+		}).start();
+		new Thread(() -> {
+			this.testMultiTableQuery3();
+			latch.countDown();
+		}).start();
 		latch.await();
 	}
 
@@ -226,7 +249,8 @@ public class AsyncShardingJdbcTest {
 
 		List list2 = businessInfoMapper.myPageListWithLike(0, 100);
 		System.err.println("size=" + list2.size());
-
+		Assert.assertEquals(100, list2.size());
+		
 		hintManager2.close();
 		stopWatch2.stop();
 		System.err.println(stopWatch2.shortSummary());
